@@ -1,0 +1,19 @@
+{
+    "editor.formatOnSave": true,
+    "typescript.autoClosingTags": true,
+    "typescript.format.enable": true,
+    "typescript.locale": "en",
+    "javascript.format.enable": true,
+    "prettier.enable": true,
+    "vetur.format.defaultFormatterOptions": {
+        "js-beautify-html": {
+            "wrap_attributes": "force-expand-multiline"
+        },
+        "prettyhtml": {
+            "printWidth": 100,
+            "singleQuote": false,
+            "wrapAttributes": false,
+            "sortAttributes": false
+        }
+    },
+}
