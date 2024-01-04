@@ -1,0 +1,17 @@
+{
+  "name": "Chrome Extension Ad Request",
+  "description": "Chrome Extension Ad Request Intercept",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {},
+  "icons": {
+    "16": "./icon.png",
+    "32": "./icon.png",
+    "48": "./icon.png",
+    "128": "./icon.png"
+  },
+  "permissions": ["tabs"]
+}
