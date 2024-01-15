@@ -20,7 +20,7 @@
     {
       "js": ["scripts/content.js"],
       "world": "MAIN",
-      "matches": ["https://freegames.org/mahjong-titans-easier/"]
+      "matches": ["https://*/*"]
     }
   ]
 }
