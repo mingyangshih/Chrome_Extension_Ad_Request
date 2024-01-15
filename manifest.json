@@ -4,14 +4,23 @@
   "version": "1.0.0",
   "manifest_version": 3,
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "scripts/background.js"
   },
-  "action": {},
+  "action": {
+    "default_icon": "./icon.png"
+  },
   "icons": {
     "16": "./icon.png",
     "32": "./icon.png",
     "48": "./icon.png",
     "128": "./icon.png"
   },
-  "permissions": ["tabs"]
+  "permissions": ["tabs"],
+  "content_scripts": [
+    {
+      "js": ["scripts/content.js"],
+      "world": "MAIN",
+      "matches": ["https://freegames.org/mahjong-titans-easier/"]
+    }
+  ]
 }
