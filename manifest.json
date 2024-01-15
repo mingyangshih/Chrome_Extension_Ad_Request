@@ -15,12 +15,12 @@
     "48": "./icon.png",
     "128": "./icon.png"
   },
-  "permissions": ["tabs"],
-  "content_scripts": [
-    {
-      "js": ["scripts/content.js"],
-      "world": "MAIN",
-      "matches": ["https://*/*"]
-    }
-  ]
+  "permissions": ["activeTab","scripting"]
+  // "content_scripts": [
+  //   {
+  //     "js": ["scripts/content.js"],
+  //     "world": "MAIN",
+  //     "matches": ["https://*/*"]
+  //   }
+  // ]
 }
