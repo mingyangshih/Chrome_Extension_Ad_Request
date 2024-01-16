@@ -1,28 +1,46 @@
 chrome.runtime.onInstalled.addListener(() => {
-  let extensionActive = false
-  setBadgeText()
-  const openConsoleScript = {
-    id: "openConsoleScript",
-    js: ["scripts/content.js"],
-    world: "MAIN",
-    matches: ["https://*/*"]
-  };
+  let extensionActive = false;
+  let queryOptions = { currentWindow: true, active: true };
+  let openConsoleActiveUrl;
+
+  setBadgeText();
+  // const openConsoleScript = {
+  //   id: "openConsoleScript",
+  //   js: ["scripts/content.js"],
+  //   world: "MAIN",
+  //   matches: ["https://*/*"],
+  // };
   chrome.action.onClicked.addListener(async (tab) => {
-    let tabId = tab.id
-    extensionActive = !extensionActive
-    setBadgeText()
-    if(extensionActive) {
-      chrome.scripting.executeScript({
-      target : {tabId : tabId},
-      world: "MAIN",
-      files : [ "scripts/content.js" ],
-    })
-    .then(() => console.log("injected script file"));
+    let tabId = tab.id;
+    extensionActive = !extensionActive;
+    setBadgeText();
+    // Get the current page's url.
+    chrome.tabs.query(queryOptions, (tab) => {
+      if (chrome.runtime.lastError) console.error(chrome.runtime.lastError);
+      openConsoleActiveUrl = tab[0]["url"];
+      // Run Before the page refresh.
+      chrome.webNavigation.onBeforeNavigate.addListener(
+        () => {
+          extensionActive = false;
+          setBadgeText();
+        },
+        { url: [{ urlEquals: openConsoleActiveUrl }] }
+      );
+    });
+    if (extensionActive) {
+      // Use execute Script run content js.
+      chrome.scripting
+        .executeScript({
+          target: { tabId: tabId },
+          world: "MAIN",
+          files: ["scripts/content.js"],
+        })
+        .then(() => console.log("injected script file"));
     }
   });
   function setBadgeText() {
     chrome.action.setBadgeText({
-      text: extensionActive? "ON":"OFF",
+      text: extensionActive ? "ON" : "OFF",
     });
-  };
+  }
 });
