@@ -4,7 +4,8 @@ chrome.runtime.onInstalled.addListener(() => {
   let queryOptions = { currentWindow: true, active: true };
   let openConsoleActiveUrl;
 
-  setBadgeText();
+  //setBadgeText();
+
   // let openConsoleScript = {
   //   id: "openConsoleScript",
   //   js: ["scripts/content.js"],
@@ -15,7 +16,7 @@ chrome.runtime.onInstalled.addListener(() => {
   chrome.action.onClicked.addListener(async (tab) => {
     let tabId = tab.id;
     extensionActive = !extensionActive;
-    setBadgeText();
+    setBadgeText(tabId);
     // Get the current page's url.
     chrome.tabs.query(queryOptions, (tab) => {
       openConsoleActiveUrl = tab[0]['url'];
@@ -23,7 +24,7 @@ chrome.runtime.onInstalled.addListener(() => {
       chrome.webNavigation.onBeforeNavigate.addListener(
         () => {
           extensionActive = false;
-          setBadgeText();
+          setBadgeText(tabId);
         },
         { url: [{ urlEquals: openConsoleActiveUrl }] }
       );
@@ -51,8 +52,9 @@ chrome.runtime.onInstalled.addListener(() => {
       }
     });
   });
-  function setBadgeText() {
+  function setBadgeText(tabId) {
     chrome.action.setBadgeText({
+      tabId,
       text: extensionActive ? 'ON' : 'OFF',
     });
   }
