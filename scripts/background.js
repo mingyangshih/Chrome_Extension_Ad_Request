@@ -4,11 +4,12 @@ chrome.runtime.onInstalled.addListener(() => {
   let openConsoleActiveUrl;
 
   setBadgeText();
-  // const openConsoleScript = {
+  // let openConsoleScript = {
   //   id: "openConsoleScript",
   //   js: ["scripts/content.js"],
   //   world: "MAIN",
-  //   matches: ["https://*/*"],
+  //   matches: [],
+  //   runAt: "document_end",
   // };
   chrome.action.onClicked.addListener(async (tab) => {
     let tabId = tab.id;
@@ -16,7 +17,6 @@ chrome.runtime.onInstalled.addListener(() => {
     setBadgeText();
     // Get the current page's url.
     chrome.tabs.query(queryOptions, (tab) => {
-      if (chrome.runtime.lastError) console.error(chrome.runtime.lastError);
       openConsoleActiveUrl = tab[0]["url"];
       // Run Before the page refresh.
       chrome.webNavigation.onBeforeNavigate.addListener(
@@ -26,17 +26,21 @@ chrome.runtime.onInstalled.addListener(() => {
         },
         { url: [{ urlEquals: openConsoleActiveUrl }] }
       );
+      if (extensionActive) {
+        // Use execute Script run content js.
+        chrome.scripting
+          .executeScript({
+            target: { tabId: tabId },
+            world: "MAIN",
+            files: ["scripts/content_openConsole.js"],
+          })
+          .then(() => console.log("injected script file"));
+        // Use registerContentScripts
+        // chrome.scripting.registerContentScripts([openConsoleScript], () => {
+
+        // });
+      }
     });
-    if (extensionActive) {
-      // Use execute Script run content js.
-      chrome.scripting
-        .executeScript({
-          target: { tabId: tabId },
-          world: "MAIN",
-          files: ["scripts/content.js"],
-        })
-        .then(() => console.log("injected script file"));
-    }
   });
   function setBadgeText() {
     chrome.action.setBadgeText({
