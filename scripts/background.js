@@ -1,5 +1,6 @@
 chrome.runtime.onInstalled.addListener(() => {
   let extensionActive = false;
+  // Tabs Query Options
   let queryOptions = { currentWindow: true, active: true };
   let openConsoleActiveUrl;
 
@@ -17,7 +18,7 @@ chrome.runtime.onInstalled.addListener(() => {
     setBadgeText();
     // Get the current page's url.
     chrome.tabs.query(queryOptions, (tab) => {
-      openConsoleActiveUrl = tab[0]["url"];
+      openConsoleActiveUrl = tab[0]['url'];
       // Run Before the page refresh.
       chrome.webNavigation.onBeforeNavigate.addListener(
         () => {
@@ -31,20 +32,28 @@ chrome.runtime.onInstalled.addListener(() => {
         chrome.scripting
           .executeScript({
             target: { tabId: tabId },
-            world: "MAIN",
-            files: ["scripts/content_openConsole.js"],
+            world: 'MAIN',
+            files: ['scripts/content_openConsole.js'],
           })
-          .then(() => console.log("injected script file"));
+          .then(() => console.log('injected script file'));
         // Use registerContentScripts
         // chrome.scripting.registerContentScripts([openConsoleScript], () => {
 
         // });
+      } else {
+        chrome.scripting
+          .executeScript({
+            target: { tabId: tabId },
+            world: 'MAIN',
+            files: ['scripts/content_closeConsole.js'],
+          })
+          .then(() => console.log('injected script file'));
       }
     });
   });
   function setBadgeText() {
     chrome.action.setBadgeText({
-      text: extensionActive ? "ON" : "OFF",
+      text: extensionActive ? 'ON' : 'OFF',
     });
   }
 });
