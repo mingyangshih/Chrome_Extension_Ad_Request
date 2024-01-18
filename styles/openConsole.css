@@ -1,0 +1,14 @@
+#position_board {
+  background-color: rgba(255, 255, 255, 0.5);
+  color: red !important;
+  position: fixed;
+  z-index: 2147483647;
+  right: 0;
+  bottom: 0%;
+  height: 500px;
+  width: 250px;
+}
+
+#footer-as > div {
+  height: inherit !important;
+}

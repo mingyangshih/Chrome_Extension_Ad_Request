@@ -19,9 +19,9 @@ chrome.runtime.onInstalled.addListener(() => {
     extensionActiveUrl[tabId] = !extensionActiveUrl[tabId] ? true : false;
     setBadgeText(tabId);
     // Chrome query API
-    chrome.tabs.query(queryOptions, (tab) => {
+    chrome.tabs.query(queryOptions, async (tab) => {
       // Get the current page's url.
-      openConsoleActiveUrl = tab[0]["url"];
+      openConsoleActiveUrl = tab[0]['url'];
       // Run Before the page refresh.
       chrome.webNavigation.onBeforeNavigate.addListener(
         () => {
@@ -31,33 +31,63 @@ chrome.runtime.onInstalled.addListener(() => {
         { url: [{ urlEquals: openConsoleActiveUrl }] }
       );
       if (extensionActive) {
+        // Insert CSS Script
+        await insertCSS('/styles/openConsole.css', tabId);
         // Use execute Script run content js.
-        chrome.scripting
-          .executeScript({
-            target: { tabId: tabId },
-            world: "MAIN",
-            files: ["scripts/content_openConsole.js"],
-          })
-          .then(() => console.log("injected script file"));
+        await executeScript('scripts/content_openConsole.js', tabId);
         // Use registerContentScripts
         // chrome.scripting.registerContentScripts([openConsoleScript], () => {
 
         // });
       } else {
-        chrome.scripting
-          .executeScript({
-            target: { tabId: tabId },
-            world: "MAIN",
-            files: ["scripts/content_closeConsole.js"],
-          })
-          .then(() => console.log("injected script file"));
+        // Remove CSS Script
+        await removeCSS('/styles/openConsole.css', tabId);
+        // Use execute Script run content js.
+        await executeScript('scripts/content_closeConsole.js', tabId);
       }
     });
   });
   function setBadgeText(tabId) {
     chrome.action.setBadgeText({
       tabId,
-      text: extensionActiveUrl[tabId] ? "ON" : "OFF",
+      text: extensionActiveUrl[tabId] ? 'ON' : 'OFF',
+    });
+  }
+  function insertCSS(path, tabId) {
+    return new Promise((r, j) => {
+      chrome.scripting
+        .insertCSS({
+          files: [path],
+          target: { tabId },
+        })
+        .then(() => {
+          r('done');
+        });
+    });
+  }
+  function removeCSS(path, tabId) {
+    return new Promise((r, j) => {
+      chrome.scripting
+        .removeCSS({
+          files: [path],
+          target: { tabId },
+        })
+        .then(() => {
+          r('done');
+        });
+    });
+  }
+  function executeScript(path, tabId) {
+    return new Promise((r, j) => {
+      chrome.scripting
+        .executeScript({
+          target: { tabId },
+          world: 'MAIN',
+          files: [path],
+        })
+        .then(() => {
+          r('done');
+        });
     });
   }
 });
