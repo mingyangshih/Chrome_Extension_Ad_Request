@@ -1,5 +1,23 @@
 {
   "dependencies": {
-    "chrome-types": "^0.1.246"
-  }
+    "chrome-types": "^0.1.246",
+    "idb": "^8.0.0"
+  },
+  "name": "yachromeextension",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mingyangshih/Chrome_Extension_Ad_Request.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mingyangshih/Chrome_Extension_Ad_Request/issues"
+  },
+  "homepage": "https://github.com/mingyangshih/Chrome_Extension_Ad_Request#readme",
+  "description": ""
 }

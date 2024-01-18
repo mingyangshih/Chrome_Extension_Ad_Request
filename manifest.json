@@ -15,7 +15,7 @@
     "48": "./icon.png",
     "128": "./icon.png"
   },
-  "permissions": ["activeTab", "scripting", "webNavigation"]
+  "permissions": ["activeTab", "scripting", "webNavigation","storage"]
   // "content_scripts": [
   //   {
   //     "js": ["scripts/content.js"],
