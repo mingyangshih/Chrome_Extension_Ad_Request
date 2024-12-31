@@ -5,26 +5,26 @@ chrome.runtime.onInstalled.addListener(() => {
   let queryOptions = { currentWindow: true, active: true };
   let openConsoleActiveUrl;
 
-  // let openConsoleScript = {
-  //   id: "openConsoleScript",
-  //   js: ["scripts/content.js"],
-  //   world: "MAIN",
-  //   matches: [],
-  //   runAt: "document_end",
-  // };
   chrome.action.onClicked.addListener(async (tab) => {
     let tabId = tab.id;
-    extensionActive = !extensionActive;
 
     extensionActiveUrl[tabId] = !extensionActiveUrl[tabId] ? true : false;
+    extensionActive = extensionActiveUrl[tabId];
+
     setBadgeText(tabId);
     // Chrome query API
     chrome.tabs.query(queryOptions, async (tab) => {
       // Get the current page's url.
-      openConsoleActiveUrl = tab[0]['url'];
+      openConsoleActiveUrl = tab[0]["url"];
+
       // Run Before the page refresh.
       chrome.webNavigation.onBeforeNavigate.addListener(
-        () => {
+        async () => {
+          // Remove CSS Script
+          await removeCSS("/styles/openConsole.css", tabId);
+          // Use execute Script run content js.
+          await executeScript("scripts/content_closeConsole.js", tabId);
+          extensionActive = !extensionActive;
           extensionActiveUrl[tabId] = false;
           setBadgeText(tabId);
         },
@@ -32,25 +32,22 @@ chrome.runtime.onInstalled.addListener(() => {
       );
       if (extensionActive) {
         // Insert CSS Script
-        await insertCSS('/styles/openConsole.css', tabId);
+        await insertCSS("/styles/openConsole.css", tabId);
         // Use execute Script run content js.
-        await executeScript('scripts/content_openConsole.js', tabId);
-        // Use registerContentScripts
-        // chrome.scripting.registerContentScripts([openConsoleScript], () => {
-
-        // });
+        await executeScript("scripts/content_openConsole.js", tabId);
       } else {
         // Remove CSS Script
-        await removeCSS('/styles/openConsole.css', tabId);
+        await removeCSS("/styles/openConsole.css", tabId);
         // Use execute Script run content js.
-        await executeScript('scripts/content_closeConsole.js', tabId);
+        await executeScript("scripts/content_closeConsole.js", tabId);
       }
     });
   });
+  function disableConsole() {}
   function setBadgeText(tabId) {
     chrome.action.setBadgeText({
       tabId,
-      text: extensionActiveUrl[tabId] ? 'ON' : 'OFF',
+      text: extensionActiveUrl[tabId] ? "ON" : "OFF",
     });
   }
   function insertCSS(path, tabId) {
@@ -61,7 +58,7 @@ chrome.runtime.onInstalled.addListener(() => {
           target: { tabId },
         })
         .then(() => {
-          r('done');
+          r("done");
         });
     });
   }
@@ -73,7 +70,7 @@ chrome.runtime.onInstalled.addListener(() => {
           target: { tabId },
         })
         .then(() => {
-          r('done');
+          r("done");
         });
     });
   }
@@ -82,11 +79,11 @@ chrome.runtime.onInstalled.addListener(() => {
       chrome.scripting
         .executeScript({
           target: { tabId },
-          world: 'MAIN',
+          world: "MAIN",
           files: [path],
         })
         .then(() => {
-          r('done');
+          r("done");
         });
     });
   }
