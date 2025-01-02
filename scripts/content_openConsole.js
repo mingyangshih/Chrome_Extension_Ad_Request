@@ -92,7 +92,8 @@
         //Get rightnow timestamp
         let rightnow = new Date().getTime();
         let requestedTime = el.dataset.requested;
-        if (rightnow - requestedTime > 60000) {
+        let nofillRefreshTime = window.YMPB.options().YMPB_REFRESH_RATE_NOFILL;
+        if (rightnow - requestedTime > +nofillRefreshTime * 1000) {
           // do not send request to DFP after one minute.
           if (
             document.getElementById(`console_${i}`).style.backgroundColor !==
