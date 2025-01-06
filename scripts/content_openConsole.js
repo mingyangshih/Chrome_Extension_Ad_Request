@@ -113,11 +113,16 @@
           } else if (
             status === "rendered" ||
             status === "dfpRendered" ||
-            status === "dfp_rendered"
+            status === "dfp_rendered" ||
+            status === "prebid_rebder"
           ) {
             //rendered
             console_el.style.backgroundColor = color.rendered;
-          } else if (status === "impressed" || status === "dfp_impressed") {
+          } else if (
+            status === "impressed" ||
+            status === "dfp_impressed" ||
+            status === "prebid_impressed"
+          ) {
             console_el.style.backgroundColor = color.impressed;
           } else if (status === "nofill" || status === "dfp_empty") {
             // nofill
