@@ -92,7 +92,8 @@
         //Get rightnow timestamp
         let rightnow = new Date().getTime();
         let requestedTime = el.dataset.requested;
-        let nofillRefreshTime = window.YMPB.options().YMPB_REFRESH_RATE_NOFILL;
+        let nofillRefreshTime =
+          window.YMPB.options().YMPB_REFRESH_RATE_NOFILL || 60;
         if (rightnow - requestedTime > +nofillRefreshTime * 1000) {
           // do not send request to DFP after one minute.
           if (
@@ -124,7 +125,11 @@
             status === "prebid_impressed"
           ) {
             console_el.style.backgroundColor = color.impressed;
-          } else if (status === "nofill" || status === "dfp_empty") {
+          } else if (
+            status === "nofill" ||
+            status === "dfp_empty" ||
+            status === "error"
+          ) {
             // nofill
             if (checkSlotExist(`console_${i}`)) {
               // If slot is nofill can not get new getResponseInformation so remove older bidder and size information.
