@@ -1,6 +1,6 @@
 #position_board {
   background-color: rgba(255, 255, 255, 0.5);
-  color: red !important;
+  color: black !important;
   position: fixed;
   z-index: 2147483647;
   right: 0;
